@@ -1,0 +1,27 @@
+Array.prototype.find DONE
+Array.prototype.findIndex DONE
+Array.prototype.every DONE
+Array.prototype.some DONE
+Array.prototype.reduceRight DONE
+Array.prototype.concat DONE
+Array.prototype.indexOf DONE
+Array.prototype.lastIndexOf DONE
+Array.prototype.includes DONE
+Array.prototype.slice DONE
+Array.prototype.join DONE
+Array.prototype.push DONE
+Array.prototype.pop DONE
+Array.prototype.shift DONE
+Array.prototype.unshift DONE
+Array.prototype.fill DONE
+Array.prototype.reverse DONE
+Array.prototype.copyWithin DONE
+Array.prototype.sort DONE
+
+
+
+
+
+
+
+Array.prototype.splice

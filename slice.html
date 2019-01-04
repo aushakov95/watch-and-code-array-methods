@@ -1,0 +1,124 @@
+<script src="../simpletest.js"></script>
+<script>
+/*
+
+NATIVE METHOD DESCRIPTION
+
+The native JS Array.prototype.slice() method returns a shallow copy of a portion of an array
+into a new array object selected from begin to end (end not included). The original array will not be modified.
+
+PROTOTYPE:
+
+function slice(array, begin, end) {
+
+	let newArray = [];
+	
+	for (; begin < end; begin++) {
+
+		newArray.push(array[begin]);
+		
+    }
+	return newArray;
+
+}
+==================================================
+
+slice(array[, begin[, end]])
+
+RETURN VALUE:
+
+Returns a new array containing the extracted elements.
+
+REQUIREMENTS:
+
+It should return a new Array instance.
+
+If begin is provided, it should start at the begin. 
+If no begin, it should start at 0.
+
+If end is provided, it should end at the end.
+If no end is provided, it should end at the array.length - 1;
+
+If begin is negative, it should be taken as offset from the end of the array.
+If begin is greater than array.length, then an empty array is returned.
+
+If end is negative, it should be taken as offset from the end of the array.
+If end is greater than the length of the sequence, slice extracts through to the end of the sequence (arr.length).
+
+*/
+
+function slice(array, begin, end) {
+
+    let newArray = [];
+
+    if (!begin) {
+        begin = 0;
+    }
+    if (!end) {
+        end = array.length;
+    }
+
+    if (begin < 0) {
+        begin = array.length - Math.abs(begin);
+    } else if (begin > array.length - 1) {
+        return [];
+    }
+
+    if (end < 0) {
+        end = array.length - Math.abs(end);
+    } else if (end > array.length) {
+        end = array.length;
+    }
+
+    for (; begin < end; begin++) {
+
+        newArray.push(array[begin]);
+        
+    }
+    return newArray;
+}
+
+tests({
+    'It should return a new Array instance.': function() {
+        let array = slice([1,2,3], 0, 2);
+        let isArray = array instanceof Array;
+        eq(isArray, true);
+    },
+    'If begin is provided, it should start at the begin. ': function() {
+        let array = slice([1,2,3], 1, 2);
+        eq(array[0], 2);
+    },
+    'If no begin, it should start at 0.': function() {
+        let array = slice([1,2,3]);
+        eq(array[0], 1);
+    },
+    'If end is provided, it should end at the end.': function() {
+        let array = slice([1,2,3,4], 0, 2);
+        eq(array[array.length -1], 2);
+    },
+    'If no end is provided, it should end at the array.length - 1.': function() {
+        let array = slice([1,2,3,4], 0);
+        eq(array[array.length - 1], 4);
+    },
+    'If begin is negative, it should be taken as offset from the end of the array.': function() {
+        let array = slice([1,2,3,4], -1);
+        eq(array[0], 4);
+        eq(array.length, 1);
+    },
+    'If begin is greater than array.length - 1, then an empty array is returned.': function() {
+        let array = slice([1,2,3,4], 4);
+        eq(array.length, 0);
+    },
+    'If end is negative, it should be taken as offset from the end of the array.': function() {
+        let array = slice([1,2,3,4], 0, -2);
+        eq(array[0], 1);
+        eq(array[1], 2);
+        eq(array.length, 2);
+    },
+    'If end is greater than the length of the sequence, slice extracts through to the end of the sequence (arr.length).': function() {
+        let array = slice([1,2,3,4], 0, 8);
+        eq(array.length, 4);
+    }
+});
+
+</script>

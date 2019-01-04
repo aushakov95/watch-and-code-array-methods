@@ -1,0 +1,62 @@
+<script src="../simpletest.js"></script>
+<script>
+/*
+
+NATIVE METHOD DESCRIPTION
+
+The native JS Array.prototype.pop() method removes the last element from an array and returns that element. This method changes the length of the array.
+
+PROTOTYPE:
+
+function pop(array) {
+    
+	let deletedElement = array[array.length - 1];
+	array.length--;
+	return deletedElement;
+}
+==================================================
+
+pop(array)
+
+RETURN VALUE:
+
+Returns the removed element from the array. Undefined if array is empty.
+
+REQUIREMENTS:
+
+It should remove the last element of the array.
+
+It should return the removed element.
+
+If array is empy, it should return undefined.
+*/
+
+function pop(array) {
+    if (array.length <= 0) {
+        return undefined;
+    }
+	let deletedElement = array[array.length - 1];
+	array.length--;
+	return deletedElement;
+}
+
+tests({
+    'It should remove the last element of the array.': function() {
+        let array = [1,2];
+        pop(array);
+        eq(array.length, 1);
+        eq(array[0], 1);
+    },
+    'It should return the removed element.': function() {
+        let array = [1,2];
+        let removedElement = pop(array);
+        eq(removedElement, 2);
+    },
+    'If array is empy, it should return undefined.': function() {
+        let array = [];
+        let removedElement = pop(array);
+        eq(removedElement, undefined);
+    }
+});
+
+</script>

@@ -1,0 +1,102 @@
+<script src="../simpletest.js"></script>
+<script>
+/*
+PROTOTYPE
+function includes(array, searchElement) {
+
+	for (let i = 0; i < array.length; i++) {
+
+		if (array[i] === searchElement) {
+			return true;
+        }
+    }
+	return false;
+
+}
+==============================================
+includes(array, searchElement[, fromIndex])
+
+RETURN VALUE:
+
+Returns true or false depending on whether an element exists in the array or not.
+
+REQUIREMENTS:
+
+It should return true if the searchElement exists in the array.
+It should return false if no element equals searchElement.
+
+It should compare the elements of the array and the searchElement using strict equality (===).
+
+If fromIndex, it should begin searching starting from fromIndex.
+If fromIndex is greater than array.length, it should return false.
+If fromIndex is negative, it should still search the array.
+If fromIndex is negative, it should still search the array from front to back.
+If fromIndex is negative, it should be taken as an offset from the end of the array.
+
+It should return true if searchElement is NaN and array contains NaN.
+It should consider all values of zero to be equal.
+*/
+
+function includes(array, searchElement, fromIndex) {
+
+    if (!fromIndex) {
+        fromIndex = 0;
+    } else if (fromIndex < 0) {
+        fromIndex = array.length - Math.max(fromIndex);
+    }
+    for (; fromIndex < array.length; fromIndex++) {
+
+        if (array[fromIndex] === searchElement) {
+            return true;
+        } else if (isNaN(searchElement) && isNaN(array[fromIndex])) {
+            return true;
+        }
+
+    }
+    return false;
+
+}
+
+tests({
+
+    'It should return true if the searchElement exists in the array.':function() {
+        let existsInArray = includes([1,2,3], 2);
+        eq(existsInArray, true);
+    },
+    'It should return false if no element equals searchElement.':function() {
+        let existsInArray = includes([1,2,3], 5);
+        eq(existsInArray, false);
+    },
+    'It should compare the elements of the array and the searchElement using strict equality (===).':function() {
+        let existsInArray = includes([1,2,3], '1');
+        eq(existsInArray, false);
+    },
+    'If fromIndex, it should begin searching starting from fromIndex.':function() {
+        let existsInArray = includes([1,2,3,4], 2, 2);
+        eq(existsInArray, false);
+    },
+    'If fromIndex is greater than array.length, it should return false.':function() {
+        let existsInArray = includes([1,2,3], 2, 3);
+        eq(existsInArray, false);
+    },
+    'If fromIndex is negative, it should be taken as an offset from the end of the array.':function() {
+        let existsInArray = includes([1,2,3,4,5], 2, -2);
+        eq(existsInArray, false);
+    },
+    'It should return true if searchElement is NaN and array contains NaN.':function() {
+        let existsInArray = includes([1,2, NaN], NaN);
+        eq(existsInArray, true);
+
+        existsInArray = includes([1,2,3, "4"], NaN);
+        eq(existsInArray, false);
+    },
+    'It should consider all values of zero to be equal.': function() {
+        let existsInArray = includes([0], -0);
+        eq(existsInArray, true);
+        
+        existsInArray = includes([-0], 0);
+        eq(existsInArray, true);
+    }
+
+});
+</script>

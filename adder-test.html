@@ -1,0 +1,68 @@
+<script src="../tinytest.js"></script>
+<script src="adder.js"></script>
+<script>
+// Example 1:
+// forEach([1,2,3], function(){
+//    console.log("hi");
+// });
+//
+// Exampe 2:
+// forEach([1,2,3], function(number){
+//    console.log(number);
+// });
+//
+// Example 3:
+// forEach([1,2,3], function(number, index){
+//    console.log(index);
+//    console.log(number);
+// });
+//
+// Example 4:
+// forEach([1,2,3], function(number, index, originalArray){
+//    console.log(originalArray)
+// });
+
+function forEach(array, callback, configurableThisObject) {
+
+  if(configurableThisObject) {
+    callback = callback.bind(configurableThisObject);
+  }
+
+  for(var i = 0; i < array.length; i++) {
+    callback(array[i], i, array);
+  }
+}
+
+tests({
+
+  'It should run the callback function array.length times.': function() {
+    var counter = 0;
+    forEach([1,2,3], function(){
+      counter++;
+    });
+    eq(counter, 3);
+  },
+  'It should pass each element of array as the first argument to the calback.': function() {
+    forEach([1], function(number){
+       eq(number, 1);
+    });
+  },
+  'It should pass in index i as the second argument to the callback': function() {
+    forEach([1], function(number, index){
+       eq(index, 0);
+    });
+  },
+  'It should pass in the original array as the third argument to the callback': function() {
+    var testArray = [1,2,3]
+    forEach(testArray, function(number, index, originalArray){
+       eq(originalArray, testArray);
+    });
+  },
+  'It should accept a configurable this object': function() {
+    forEach([1], function() {
+      eq(this.description, 'Configurable this object');
+    }, {description: 'Configurable this object'});
+  }
+
+});
+</script>

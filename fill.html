@@ -1,0 +1,140 @@
+<script src="../simpletest.js"></script>
+<script>
+/*
+NATIVE METHOD DESCRIPTION
+
+The native JS Array.prototype.fill() method fills all the elements of an array from a start index 
+to an end index with a static value. The end index is not included.
+
+PROTOTYPE:
+
+function fill(array, value, start) {
+
+	for(let i = start; i < array.length; i++) {
+		array[i] = value;
+    }
+	return array;
+}
+==================================================
+
+fill(array, value[, start[, end]])
+
+RETURN VALUE:
+
+Returns the modified array.
+
+REQUIREMENTS:
+
+It should fill the array with the value passed in.
+
+If no start, it should default to 0.
+If start, it should start inserting values at start.
+
+If no end, it should default to array.length.
+If end, it should end at end.
+
+If start is negative, it should be treated as an offset from the end of the array.
+If end is negative is should be treated as an offset from the end of the array.
+
+It should return the modified array.
+
+If array is empty it should return an empty array.
+*/
+
+function fill(array, value, start, end) {
+
+    switch (arguments.length) {
+        case 0: 
+            return undefined;
+        case 1:
+            return array;
+        case 2:
+            start = 0;
+            end = array.length;
+            break;
+        case 3:
+            end = array.length;
+            break;
+        case 4:
+            break;
+        default:
+            start = 0;
+            end = array.length;
+    }
+
+    if (start < 0) {
+        start = array.length + start; //offset
+    }
+    if (end < 0) {
+        end = array.length + end; //offset
+    }
+
+    for(let i = start; i < end; i++) {
+        array[i] = value;
+    }
+    return array;
+}
+
+tests({
+    'It should fill the array with the value passed in.': function() {
+        let array = [1,2,3];
+        fill(array, 5, 0);
+        eq(array[0], 5);
+        eq(array[1], 5);
+        eq(array[2], 5);
+    },
+    'If no start, it should default to 0.': function() {
+        let array = [1,2,3];
+        fill(array, 5);
+        eq(array[0], 5);
+        eq(array[1], 5);
+        eq(array[2], 5);
+    },
+    'If start, it should start inserting values at start.': function() {
+        let array = [1,2,3];
+        fill(array, 5, 1);
+        eq(array[0], 1);
+        eq(array[1], 5);
+        eq(array[2], 5);
+    },
+    'If no end, it should default to array.length.': function() {
+        let array = [1,2,3];
+        fill(array, 5, 1);
+        eq(array[0], 1);
+        eq(array[1], 5);
+        eq(array[2], 5);
+    },
+    'If end, it should end at end.': function() {
+        let array = [1,2,3];
+        fill(array, 5, 1, 2);
+        eq(array[0], 1);
+        eq(array[1], 5);
+        eq(array[2], 3);
+    },
+    'If start is negative, it should be treated as an offset from the end of the array.': function() {
+        let array = [1,2,3];
+        fill(array, 5, -2);
+        eq(array[0], 1);
+        eq(array[1], 5);
+        eq(array[2], 5);
+    },
+    'If end is negative is should be treated as an offset from the end of the array.': function() {
+        let array = [1,2,3];
+        fill(array, 5, -3, -1);
+        eq(array[0], 5);
+        eq(array[1], 5);
+        eq(array[2], 3);
+    },
+    'It should return the modified array.': function() {
+        let array = [1,2,3];
+        let returnedArray = fill(array, 5);
+        eq(returnedArray, array);
+    },
+    'If array is empty it should return an empty array.': function() {
+        let array = [];
+        let returnedArray = fill(array, 5);
+        eq(returnedArray.length, 0);
+    }
+});
+
+</script>

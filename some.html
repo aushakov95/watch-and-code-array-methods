@@ -1,0 +1,184 @@
+<script src="../simpletest.js"></script>
+<script>
+/*
+
+NATIVE METHOD DESCRIPTION
+
+The native JS Array.prototype.some() method tests whether at least one element in the array passes the test implemented by the provided function.
+
+PROTOTYPE:
+
+function some(arr, callback) {	
+	for (var i = 0; i < arr.length; i++) {
+		let result = callback(arr[i]);
+		if (result) {
+			return true;
+        }
+    }
+	return false;
+}
+==================================================
+
+some(array, callback[, thisArgument])
+
+CALLBACK PARAMETERS:
+
+element - Current element being processed.
+index (optional) - The index of the current element being processed in the array.
+array (optional) - The array, on which find() was called upon.
+
+
+RETURN VALUE:
+
+Returns true if the callback function returns a truthy value for any array element; otherwise, false.
+
+REQUIREMENTS:
+
+It should execute the callback once for each element until it finds one where callback returns a true value.
+It should not execute callback on holes.
+
+It should pass the current element as the first argument to the callback.
+It should pass the current index as the second argument to the callback.
+It should pass the array as the third argument to the callback.
+It should pass a this object as the fourth argument.
+
+It should return false if the callback does not return a truthy value for any element.
+
+The callback should NOT visit any element that is appended to the array after every() has been already called.
+The callback should NOT visit the elements that have been deleted by the callback.
+If an existing, unvisited element is changed by the callback, then that should remain its new value when it is visited by the callback.
+
+*/
+
+function some(arr, callback, thisArg) {	
+
+    let length = arr.length;
+
+    if (thisArg) {
+        callback = callback.bind(thisArg);
+    }
+
+	for (let i = 0; i < length; i++) {
+
+        if (i in arr) {
+            let result = callback(arr[i], i, arr);
+		    if (result) {
+			    return true;
+            }
+        }
+    }
+	return false;
+}
+
+tests({
+    'It should execute the callback once for each element until it finds one where callback returns a truthy value.': function() {
+        let numberOfTimesCallbackHasRun = 0;
+        let array = [1, 2, 3, 4];
+        
+        some(array, function(element){
+            numberOfTimesCallbackHasRun++;
+            return element > 2;
+        });
+        eq(numberOfTimesCallbackHasRun, 3);
+    },
+
+    'It should not execute callback on holes.': function() {
+        let numberOfTimesCallbackHasRun = 0;
+        let array = [1,,,];
+        
+        some(array, function(element){
+            numberOfTimesCallbackHasRun++;
+            return element > 1;
+        });
+        eq(numberOfTimesCallbackHasRun, 1);
+    },
+
+    'It should pass the current element as the first argument to the callback.': function() {
+        let array = [1];
+
+        some(array, function(element){
+            eq(element, 1);
+        });
+    },
+
+    'It should pass the current index as the second argument to the callback.': function() {
+        let array = [1];
+
+        some(array, function(element, index){
+            eq(index, 0);
+        });
+    },
+
+    'It should pass the array as the third argument to the callback.': function() {
+        let array = [1, 2, 3];
+
+        some(array, function(element, index, originalArray){
+            eq(array, originalArray);
+        });
+    },
+
+    'It should accept a configurable this object as the fourth argument': function() {
+        some([1], function(){
+            eq(this.description, 'hi');
+        }, {description: 'hi'});
+    },
+
+    'It should return false if the callback does not return a truthy value for any element.': function() {
+        let array = [1, 5, 2, 25];
+
+        let result = some(array, function(element){
+            return element > 100;
+        });
+
+        eq(result, false);
+    },
+
+    'It should return true if the callback returns true for any value.': function() {
+        let array = [1, 5, 2, 25];
+
+        let result = some(array, function(element){
+            return element > 5;
+        });
+
+        eq(result, true);
+    },
+
+    'The callback should NOT visit any element that is appended to the array after some() has been already called.': function(){
+        let array = [1];
+        let numberOfTimesCallbackHasRun = 0;
+
+        some(array, function(element, index, passedArray){
+            numberOfTimesCallbackHasRun++;
+            passedArray.push(2);
+        });
+
+        eq(numberOfTimesCallbackHasRun, 1);
+    },
+
+    'The callback should NOT visit the elements that have been deleted by the callback.': function(){
+        let array = [1, 2];
+        let numberOfTimesCallbackHasRun = 0;
+
+        some(array, function(element, index, passedArray){
+            numberOfTimesCallbackHasRun++;
+            passedArray.pop();
+        });
+
+        eq(numberOfTimesCallbackHasRun, 1);
+    },
+
+    'If an existing, unvisited element is changed by the callback, then that should remain its new value when it is visited by the callback.': function(){
+        let array = [1, 2, 3];
+        let numberOfTimesCallbackHasRun = 0;
+
+        some(array, function(element, index, passedArray){
+            numberOfTimesCallbackHasRun++;
+            passedArray[1] = 555;
+            if (index === 1) {
+                eq(element, 555);
+            }
+        });
+    }
+});
+
+</script>

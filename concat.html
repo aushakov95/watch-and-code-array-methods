@@ -1,0 +1,113 @@
+<script src="../simpletest.js"></script>
+<script>
+/*
+NATIVE METHOD DESCRIPTION
+
+The native JS Array.prototype.concat() method is used to merge two or more arrays. This method 
+does not change the existing arrays, but instead returns a new array.
+
+PROTOTYPE:
+
+function concat(firstArray, secondArray) {
+
+	let newArray = firstArray.slice();
+	
+	secondArray.forEach(function(el) {
+
+		newArray.push(el);
+	});
+	return newArray;
+}
+==================================================
+
+concat(array[, value2[, ...[, valueN]]]])
+
+RETURN VALUE:
+
+Returns a new Array instance.
+
+REQUIREMENTS:
+
+It should return a new Array instance.
+
+It should concatenate all the arrays passed into concat().
+It should concatenate all non array arguments too.
+
+It should return the array consisting of the elements of the first array on which it is called, followed in order by, for each argument, the elements of that argument.
+
+It should not modify any arrays provided as arguments.
+
+It should throw a SyntaxError if the first argument is not an array.
+
+If an object reference is an element of any argument then it should copy object references into the new array. Both the original
+and new array should refer to the same object. 
+*/
+function concat(firstArray, ...theArguments) {
+
+    if (!(firstArray instanceof Array)){
+        throw new SyntaxError('First argument must be of type array');
+    }
+    let newArray = firstArray.slice();
+    if (theArguments) {
+
+        theArguments.forEach(function(argument){
+
+            if(argument instanceof Array) {
+                argument.forEach(function(element){
+                    newArray.push(element);
+                });
+            } else {
+                newArray.push(argument);
+            }
+        });
+    }
+    return newArray;
+}
+
+tests({
+    'It should return a new Array instance.': function () {
+        var isArray = false;
+        let newArray = concat([1,2,3]);
+        isArray = newArray instanceof Array;
+        eq(isArray, true);
+    },
+    'It should concatenate all the arrays passed into concat().': function () {
+        let newArray = concat([1], [2]);
+        eq(newArray[0], 1);
+        eq(newArray[1], 2);
+        eq(newArray.length, 2);
+    },
+    'It should concatenate all non array arguments too.': function () {
+        let newArray = concat([1], 2);
+        eq(newArray[0], 1);
+        eq(newArray[1], 2);
+        eq(newArray.length, 2);
+    },
+    'It should not modify any arrays provided as arguments.': function () {
+        let firstArray = [1];
+        let secondArray = [2];
+        let newArray = concat(firstArray, secondArray);
+        eq(firstArray.length, 1);
+        eq(firstArray[0], 1);
+        eq(secondArray.length, 1);
+        eq(secondArray[0], 2);
+    },
+    'It should throw an Uncaught SyntaxError if the first argument is not an array.': function () {
+        var isSyntaxError = false;
+        try {
+            concat(1, [2]);
+        } catch(e) {
+            isSyntaxError = e instanceof SyntaxError;
+        }
+        eq(isSyntaxError, true);
+    },
+    'If an object reference is an element of any argument then it should copy object references into the new array. Both the original and new array should refer to the same object': function () {
+        var testObject = {
+            description: 'hi'
+        }
+        let array = [testObject];
+        let newArray = concat(array, 1);
+        eq(newArray[0], testObject);
+    },
+});
+</script>

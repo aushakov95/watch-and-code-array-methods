@@ -1,0 +1,90 @@
+<script src="../simpletest.js"></script>
+<script>
+/*
+NATIVE METHOD DESCRIPTION
+
+The native JS Array.prototype.unshift() method adds one or more elements to the beginning of an array and returns the new length of the array.
+
+PROTOTYPE:
+
+function unshift(array, element) {
+	
+	var nextElement = 0;
+	var currentElement = array[0];
+	var length = array.length;
+
+	for (let i = 0; i < length; i++) {
+	
+		nextElement = array[i + 1];
+		array[i + 1] = currentElement;
+		currentElement = nextElement;	
+    }
+	array[0] = element;
+}
+==================================================
+
+unshift(array, element1[, ...[, elementN]])
+
+RETURN VALUE:
+
+Returns new length property of the array upon which the method was called.
+
+REQUIREMENTS:
+
+It should add an element to the beginning of the array.
+
+If there are more than one elements, it should add them to the array in the same order they were passed in.
+
+It should not remove any elements.
+
+It should return new array.length.
+*/
+
+function unshift(array, ...elements) {
+	
+    let length = array.length;
+    let offset = elements.length;
+
+    for (let i = length - 1; i >= 0; i--) {
+        array[i + offset] = array[i];
+    }
+
+    let i = 0;
+
+    elements.forEach(function(element){
+        array[i] = element;
+        i++;
+    });
+    return array.length;
+}
+
+tests({
+    'It should add an element to the beginning of the array.': function() {
+        let array = [2,3];
+        unshift(array, 1);
+        eq(array.length, 3);
+        eq(array[0], 1);
+    },
+    'If there are more than one elements, it should add them to the array in the same order they were passed in.': function() {
+        let array = [3,4];
+        unshift(array, 1, 2);
+        eq(array.length, 4);
+        eq(array[0], 1);
+        eq(array[1], 2);
+    },
+    'It should not remove any elements.': function() {
+        let array = [3,4];
+        unshift(array, 1, 2);
+        eq(array[0], 1);
+        eq(array[1], 2);
+        eq(array[2], 3);
+        eq(array[3], 4);
+    },
+    'It should return new array.length.': function() {
+        let array = [3,4];
+        let arrayLength = unshift(array, 1, 2);
+        eq(arrayLength, 4);
+    }
+});
+
+</script>

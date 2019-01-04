@@ -1,0 +1,173 @@
+<script src="../simpletest.js"></script>
+<script>
+/*
+
+NATIVE METHOD DESCRIPTION
+
+The native JS Array.prototype.findIndex() method returns the index of the first element in the array that
+satisfies the provided testing function. Otherwise it returns -1, indicating no element passed the test.
+
+PROTOTYPE:
+
+function findIndex(arr, callback) {	
+	for (var i = 0; i < arr.length; i++) {
+		let result = callback(arr[i]);
+		if (result) {
+			return i;
+        }
+    }
+	return -1;
+}
+==================================================
+
+findIndex(array, callback[, thisArgument])
+
+CALLBACK PARAMETERS:
+
+element - Current element being processed.
+index (optional) - The index of the current element being processed in the array.
+array (optional) - The array, on which find() was called upon.
+
+RETURN VALUE:
+
+Returns the index of the first element in the array that satisfies the provided testing function. Otherwise, -1 is returned.
+
+REQUIREMENTS:
+
+It should execute the callback once for each element until callback returns true.
+It should execute callback even on holes.
+
+It should pass the current element as the first argument to the callback.
+It should pass the current index as the second argument to the callback.
+It should pass the array as the third argument to the callback.
+
+It should return the index of the element for which callback returned true.
+If no such element is found, it should return -1.
+
+It should NOT mutate the array on which it is called.
+
+The callback should NOT visit any element that is appended to the array after findIndex() has been already called.
+The callback should visit the elements that have been deleted by the callback.
+If an existing, unvisited element is changed by the callback, then that should remain its new value when it is visited by the callback.
+
+*/
+
+function findIndex(arr, callback) {	
+
+    let length = arr.length;
+
+	for (let i = 0; i < length; i++) {
+		let result = callback(arr[i], i, arr);
+		if (result) {
+			return i;
+        }
+    }
+	return -1;
+}
+
+tests({
+    'It should execute the callback once for each element until callback returns true.': function() {
+        let numberOfTimesCallbackHasRun = 0;
+        let array = [1, 2, 3];
+        
+        findIndex(array, function(element){
+            numberOfTimesCallbackHasRun++;
+            return element > 1;
+        });
+        eq(numberOfTimesCallbackHasRun, 2);
+    },
+
+    'It should execute callback even on holes.': function() {
+        let numberOfTimesCallbackHasRun = 0;
+        let array = [,,2,];
+        
+        findIndex(array, function(element){
+            numberOfTimesCallbackHasRun++;
+            return element > 1;
+        });
+        eq(numberOfTimesCallbackHasRun, 3);
+    },
+
+    'It should pass the current element as the first argument to the callback.': function() {
+        let array = [1];
+
+        findIndex(array, function(element){
+            eq(element, 1);
+        });
+    },
+
+    'It should pass the current index as the second argument to the callback.': function() {
+        let array = [1];
+
+        findIndex(array, function(element, index){
+            eq(index, 0);
+        });
+    },
+
+    'It should pass the array as the third argument to the callback.': function() {
+        let array = [1, 2, 3];
+
+        findIndex(array, function(element, index, originalArray){
+            eq(array, originalArray);
+        });
+    },
+
+    'It should return the index of the element for which callback returned true.': function() {
+        let array = [1, 5, 2, 25];
+
+        let result = findIndex(array, function(element){
+            return element > 4;
+        });
+
+        eq(result, 1);
+    },
+
+    'If no such element is found, it should return -1.': function() {
+        let array = [3, 3, 3, 3];
+
+        let result = findIndex(array, function(element){
+            return element > 4;
+        });
+
+        eq(result, -1);
+    },
+
+    'The callback should NOT visit any element that is appended to the array after findIndex() has been already called.': function(){
+        let array = [1];
+        let numberOfTimesCallbackHasRun = 0;
+
+        findIndex(array, function(element, index, passedArray){
+            numberOfTimesCallbackHasRun++;
+            passedArray.push(2);
+        });
+
+        eq(numberOfTimesCallbackHasRun, 1);
+    },
+
+    'The callback should visit the elements that have been deleted by the callback.': function(){
+        let array = [1, 2];
+        let numberOfTimesCallbackHasRun = 0;
+
+        findIndex(array, function(element, index, passedArray){
+            numberOfTimesCallbackHasRun++;
+            passedArray.pop();
+        });
+
+        eq(numberOfTimesCallbackHasRun, 2);
+    },
+
+    'If an existing, unvisited element is changed by the callback, then that should remain its new value when it is visited by the callback.': function(){
+        let array = [1, 2, 3];
+        let numberOfTimesCallbackHasRun = 0;
+
+        findIndex(array, function(element, index, passedArray){
+            numberOfTimesCallbackHasRun++;
+            passedArray[1] = 555;
+            if (index === 1) {
+                eq(element, 555);
+            }
+        });
+    }
+});
+
+</script>

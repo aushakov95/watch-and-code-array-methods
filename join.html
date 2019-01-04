@@ -1,0 +1,80 @@
+<script src="../simpletest.js"></script>
+<script>
+/*
+
+NATIVE METHOD DESCRIPTION
+
+The native JS Array.prototype.join() method creates and returns a new string by concatenating all of the 
+elements in an array (or an array-like object), separated by commas or a specified separator string.
+
+PROTOTYPE:
+
+function join(array) {
+	
+	let resultString = '';
+	let separator = ',';
+	array.forEach(function(element){
+
+		resultString += element + separator;
+	
+	});
+
+	return resultString.slice(0, -separator.length);
+}
+==================================================
+
+join([separator])
+
+RETURN VALUE:
+
+Returns a string with all array elements joined. If arr.length is 0, the empty string is returned.
+
+REQUIREMENTS:
+
+It should return a string.
+
+If no separator, it should return a string of elements separated by comma.
+If separator, it should return a string of elements separated by separated.
+
+If array is empty, it should return an empty string.
+
+*/
+
+function join(array, separator) {
+	
+    let resultString = '';
+    
+	if (!separator) {
+        var separator = ',';
+    }
+
+	array.forEach(function(element){
+
+		resultString += element + separator;
+	
+	});
+
+	return resultString.slice(0, -separator.length);
+}
+
+tests({
+    'It should return a string.': function() {
+        let string = join([1,2,3,4]);
+        let isString = (string instanceof String || typeof string === 'string');
+        eq(isString, true);
+    },
+    'If no separator, it should return a string of elements separated by comma.': function() {
+        let string = join([1,2,3,4]);
+        eq(string, '1,2,3,4');
+    },
+    'If separator, it should return a string of elements separated by separated.': function() {
+        let string = join([1,2,3,4], '-');
+        eq(string, '1-2-3-4');
+    },
+    'If array is empty, it should return an empty string.': function() {
+        let string = join([], '==');
+        eq(string, '');
+    }
+});
+
+</script>

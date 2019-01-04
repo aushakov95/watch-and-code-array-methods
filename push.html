@@ -1,0 +1,78 @@
+<script src="../simpletest.js"></script>
+<script>
+/*
+
+NATIVE METHOD DESCRIPTION
+
+The native JS Array.prototype.push() method adds one or more elements to the end of an array and returns the new length of the array.
+
+PROTOTYPE:
+
+function push(array, element) {
+
+	array[array.length] = element;
+	return array.length;
+}
+==================================================
+
+push(element1[, ...[, elementN]])
+
+RETURN VALUE:
+
+Returns the new array.length
+
+REQUIREMENTS:
+
+It should append elements to an array.
+
+If no element, it should not make any changes to array and return the array.length.
+
+It more than one element, it should append all elements.
+
+If element is an array, it should append its elements to the main array.
+
+*/
+
+function push(array, ...elements) {
+
+    elements.forEach(function(element){
+        if (element instanceof Array) {
+            element.forEach(function(el) {
+                array[array.length] = el;
+            });
+        }
+        array[array.length] = element;
+    });
+    return array.length;
+}
+
+tests({
+    'It should append elements to an array.': function() {
+        let array = [1,2,3];
+        push(array, 4);
+        eq(array[array.length - 1], 4);
+    },
+    'If no element, it should not make any changes to array and return the array.length.': function() {
+        let array = [];
+        let result = push(array);
+        eq(result, 0);
+        eq(array.length, 0);
+    },
+    'If more than one element, it should append all elements.': function() {
+        let array = [1,2,3];
+        push(array, 4, 5, 6);
+        eq(array.length, 6);
+        eq(array[3], 4);
+        eq(array[4], 5);
+        eq(array[5], 6);
+    },
+    'If element is an array, it should append its elements to the main array.': function() {
+        let array = [1,2,3];
+        let arrayAsElement = [4,5];
+        push(array, arrayAsElement);
+        eq(array[3], 4);
+        eq(array[4], 5);
+    }
+});
+
+</script>

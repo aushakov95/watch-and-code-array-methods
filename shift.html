@@ -1,0 +1,72 @@
+<script src="../simpletest.js"></script>
+<script>
+/*
+
+NATIVE METHOD DESCRIPTION
+
+The native JS Array.prototype.shift() method removes the first element from an array and returns that removed element. This method changes the length of the array.
+
+PROTOTYPE:
+
+function shift(array) {
+
+	let removedElement = array[0];
+	for (let i = 1; i < array.length; i++) {
+	
+		array[i - 1] = array[i];
+    }
+    array.length--;
+    return removedElement;
+}
+==================================================
+
+shift(array)
+
+RETURN VALUE:
+
+Returns the removed element from the array. Undefined if array is empty.
+
+REQUIREMENTS:
+
+It should remove the zeroeth element of the array.
+
+It should return the removed element.
+
+If array is empy, it should return undefined.
+*/
+
+function shift(array) {
+
+    if (array.length <= 0) {
+        return undefined;
+    }
+    let removedElement = array[0];
+    for (let i = 1; i < array.length; i++) {
+
+        array[i - 1] = array[i];
+    }
+    array.length--;
+    return removedElement;
+}
+
+tests({
+    'It should remove the zeroeth element of the array.': function() {
+        let array = [1,2];
+        shift(array);
+        eq(array.length, 1);
+        eq(array[0], 2);
+
+    },
+    'It should return the removed element.': function() {
+        let array = [1,2];
+        let removedElement = shift(array);
+        eq(removedElement, 1);
+    },
+    'If array is empy, it should return undefined.': function() {
+        let array = [];
+        let removedElement = shift(array);
+        eq(removedElement, undefined);
+    }
+});
+
+</script>
